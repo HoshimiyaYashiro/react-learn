@@ -1,25 +1,42 @@
-import { NextResponse, NextRequest } from 'next/server'
- 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    return NextResponse.next()
-  }
-  const isAuthenticated = false
-  const cookies = request.cookies.getAll()
-  console.log(request.nextUrl.pathname)
-  console.log(cookies)
- 
-  // If the user is authenticated, continue as normal
-  if (isAuthenticated) {
-    return NextResponse.next()
-  }
+import createIntlMiddleware from 'next-intl/middleware';
+import {locales} from './navigation';
+import { NextRequest, NextResponse } from 'next/server';
 
-  // Redirect to login page if not authenticated
-  if (!request.nextUrl.pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/auth', request.url))
+// export default createIntlMiddleware({
+//   locales,
+//   defaultLocale: 'en'
+// });
+
+const publicPages = [
+  '/auth'
+];
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  localePrefix: 'always',
+  defaultLocale: 'en'
+});
+
+export default function middleware(req: NextRequest) {
+  const publicPathnameRegex = RegExp(
+    `^(/(${locales.join('|')}))?(${publicPages
+      .flatMap((p) => (p === '/' ? ['', '/'] : p))
+      .join('|')})/?$`,
+    'i'
+  );
+  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+
+  if (isPublicPage) {
+    console.log('go', req.nextUrl.pathname)
+    return intlMiddleware(req);
   } else {
-    return NextResponse.next()
+    console.log('router', req.nextUrl.pathname)
+    return NextResponse.redirect(new URL('/en/auth', req.url))
   }
 }
 
-export const config = { matcher: '/((?!.*\\.).*)' }
+export const config = {
+  // Skip all non-content paths
+  matcher: ['/((?!.*\\.).*)', '/(en|vi)/:path*']
+};
+// export const config = { matcher: ['/((?!.*\\.).*)', '/(vi|en)/:path*'] }
