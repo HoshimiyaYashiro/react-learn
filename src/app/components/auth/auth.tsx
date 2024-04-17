@@ -1,5 +1,5 @@
 'use client';
-import { Tabs, Typography } from '@arco-design/web-react';
+import { Tabs } from '@arco-design/web-react';
 import Login from "./login";
 import Register from "./register";
 

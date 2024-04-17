@@ -1,11 +1,8 @@
 import createIntlMiddleware from 'next-intl/middleware';
-import {locales} from './navigation';
+import { locales } from './navigation';
 import { NextRequest, NextResponse } from 'next/server';
+import { withAuth } from 'next-auth/middleware';
 
-// export default createIntlMiddleware({
-//   locales,
-//   defaultLocale: 'en'
-// });
 
 const publicPages = [
   '/auth'
@@ -17,6 +14,23 @@ const intlMiddleware = createIntlMiddleware({
   defaultLocale: 'en'
 });
 
+const authMiddleware = withAuth(
+  // Note that this callback is only invoked if
+  // the `authorized` callback has returned `true`
+  // and not for pages listed in `pages`.
+  function onSuccess(req) {
+    return intlMiddleware(req);
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => token != null
+    },
+    pages: {
+      signIn: '/auth'
+    }
+  }
+);
+
 export default function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join('|')}))?(${publicPages
@@ -27,11 +41,9 @@ export default function middleware(req: NextRequest) {
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
 
   if (isPublicPage) {
-    console.log('go', req.nextUrl.pathname)
     return intlMiddleware(req);
   } else {
-    console.log('router', req.nextUrl.pathname)
-    return NextResponse.redirect(new URL('/en/auth', req.url))
+    return (authMiddleware as any)(req);
   }
 }
 
@@ -39,4 +51,3 @@ export const config = {
   // Skip all non-content paths
   matcher: ['/((?!.*\\.).*)', '/(en|vi)/:path*']
 };
-// export const config = { matcher: ['/((?!.*\\.).*)', '/(vi|en)/:path*'] }

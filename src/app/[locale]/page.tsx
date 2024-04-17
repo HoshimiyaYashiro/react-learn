@@ -1,9 +1,7 @@
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import HomeIndex from '../components/home';
 
-export default function Home() {
+export default async function Home() {
   return (
-    <div className="">
-    </div>
+    <HomeIndex />
   );
 }

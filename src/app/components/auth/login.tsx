@@ -1,16 +1,39 @@
-import { Form, Input, Button, Checkbox } from '@arco-design/web-react';
-import { useRef, useEffect, useState } from 'react';
-import {useTranslations} from 'next-intl';
+'use client';
+import { Form, Input, Button } from '@arco-design/web-react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from "next/navigation";
+import { signIn } from 'next-auth/react';
+
 
 const FormItem = Form.Item;
 
 const Login = () => {
   const t = useTranslations('Auth');
   const [form] = Form.useForm();
+  const router = useRouter();
   const handleSubmit = async () => {
     if (form) {
-      const formData = form.getFieldsValue();
-      console.log(formData);
+      const { username, password } = form.getFieldsValue();
+      try {
+        const response: any = await signIn("credentials", {
+          username,
+          password,
+          redirect: false,
+        });
+        console.log({ response });
+        if (!response?.error) {
+          router.push("/");
+          router.refresh();
+        }
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        // Process response here
+        console.log("Login Successful", response);
+      } catch (error: any) {
+        console.error("Login Failed:", error);
+      }
     }
   };
   return (

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@arco-design/web-react/dist/css/arco.css";
 import "../globals.css";
-import {NextIntlClientProvider, useMessages} from 'next-intl';
-
+import { NextIntlClientProvider, useMessages } from 'next-intl';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -13,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: {locale}
+  params: { locale }
 }: Readonly<{
   children: React.ReactNode;
-  params: {locale: string};
+  params: { locale: string };
 }>) {
   const messages = useMessages();
   return (
