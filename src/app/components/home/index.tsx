@@ -1,28 +1,24 @@
 // import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
 // import { cookies } from 'next/headers';
-'use client';
-import { generateClient } from 'aws-amplify/api';
-import { createBlog } from '@/graphql/mutations';
-import { Button, Form, Input } from 'antd';
+// import { Button, Form, Input } from 'antd';
 
-
-const HomeIndex = () => {
-  const client = generateClient();
-  const createBlogFnc = async (formData: any) => {
-    console.log(formData)
-    const result = await client.graphql({
-      query: createBlog,
-      variables: {
-        input: {
-          name: formData.name,
-        },
-      },
-    })
-    console.log(result)
-  }
+const HomeIndex = async () => {
+  // const client = generateClient();
+  // const createBlogFnc = async (formData: any) => {
+  //   console.log(formData)
+  //   const result = await client.graphql({
+  //     query: createBlog,
+  //     variables: {
+  //       input: {
+  //         name: formData.name,
+  //       },
+  //     },
+  //   })
+  //   console.log(result)
+  // }
   return (
     <div>
-      <Form onFinish={createBlogFnc}>
+      {/* <Form>
         <Form.Item
           label="Blog Name"
           name="name"
@@ -35,7 +31,7 @@ const HomeIndex = () => {
             Submit
           </Button>
         </Form.Item>
-      </Form>
+      </Form> */}
     </div>
   );
 };

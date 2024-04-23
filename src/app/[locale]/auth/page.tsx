@@ -1,8 +1,9 @@
-import Auth from "@/app/components/auth/auth";
-const AuthPage = () => {
+import { SignIn } from "@/app/components/auth/sign-in";
+
+const AuthPage = async () => {
   return (
     <div className="auth-page min-h-screen flex justify-center items-center">
-      <Auth />
+      <SignIn />
     </div>
     
   );

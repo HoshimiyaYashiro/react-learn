@@ -1,12 +1,8 @@
 import createIntlMiddleware from 'next-intl/middleware';
 import { locales } from './navigation';
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth } from 'next-auth/middleware';
-
-
-const publicPages = [
-  '/auth'
-];
+import { getServerUser } from './app/utils/amplifyServerUtils';
+// import { auth } from "@/auth"
 
 const intlMiddleware = createIntlMiddleware({
   locales,
@@ -14,40 +10,38 @@ const intlMiddleware = createIntlMiddleware({
   defaultLocale: 'en'
 });
 
-const authMiddleware = withAuth(
-  // Note that this callback is only invoked if
-  // the `authorized` callback has returned `true`
-  // and not for pages listed in `pages`.
-  function onSuccess(req) {
-    return intlMiddleware(req);
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => token != null
-    },
-    pages: {
-      signIn: '/auth'
-    }
-  }
-);
+const publicPages = [
+  '/auth'
+]
 
-export default function middleware(req: NextRequest) {
+// const authMiddleware = auth((req) => {
+//   const session = req.auth
+//   if (session) {
+//     return intlMiddleware(req)
+//   }
+// })
+
+export default async function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
-    `^(/(${locales.join('|')}))?(${publicPages
-      .flatMap((p) => (p === '/' ? ['', '/'] : p))
-      .join('|')})/?$`,
-    'i'
-  );
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+    `^(/(${locales.join("|")}))?(${publicPages.flatMap((p) => (p === "/" ? ["", "/"] : p)).join("|")})/?$`,
+    "i"
+  )
+  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
 
   if (isPublicPage) {
-    return intlMiddleware(req);
+    return intlMiddleware(req)
   } else {
-    return (authMiddleware as any)(req);
+    const user = await getServerUser()
+    if (user) {
+      return intlMiddleware(req)
+    } else {
+      return NextResponse.redirect(new URL('/auth', req.url))
+    }
+    // return (authMiddleware as any)(req)
   }
 }
 
 export const config = {
   // Skip all non-content paths
-  matcher: ['/((?!.*\\.).*)', '/(en|vi)/:path*']
+  matcher: ['/((?!api|.*\\.).*)']
 };
