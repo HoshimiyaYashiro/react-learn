@@ -2,7 +2,6 @@ import createIntlMiddleware from 'next-intl/middleware';
 import { locales } from './navigation';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerUser } from './app/utils/amplifyServerUtils';
-// import { auth } from "@/auth"
 
 const intlMiddleware = createIntlMiddleware({
   locales,
@@ -10,16 +9,9 @@ const intlMiddleware = createIntlMiddleware({
   defaultLocale: 'en'
 });
 
-const publicPages = [
+const publicPages: string[] = [
   '/auth'
 ]
-
-// const authMiddleware = auth((req) => {
-//   const session = req.auth
-//   if (session) {
-//     return intlMiddleware(req)
-//   }
-// })
 
 export default async function middleware(req: NextRequest) {
   const publicPathnameRegex = RegExp(
@@ -32,6 +24,8 @@ export default async function middleware(req: NextRequest) {
     return intlMiddleware(req)
   } else {
     const user = await getServerUser()
+    console.log(user)
+
     if (user) {
       return intlMiddleware(req)
     } else {

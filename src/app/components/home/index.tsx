@@ -1,39 +1,10 @@
-// import { generateServerClientUsingCookies } from '@aws-amplify/adapter-nextjs/api';
-// import { cookies } from 'next/headers';
-// import { Button, Form, Input } from 'antd';
+'use client';
 
-const HomeIndex = async () => {
-  // const client = generateClient();
-  // const createBlogFnc = async (formData: any) => {
-  //   console.log(formData)
-  //   const result = await client.graphql({
-  //     query: createBlog,
-  //     variables: {
-  //       input: {
-  //         name: formData.name,
-  //       },
-  //     },
-  //   })
-  //   console.log(result)
-  // }
-  return (
-    <div>
-      {/* <Form>
-        <Form.Item
-          label="Blog Name"
-          name="name"
-          rules={[{ required: true, message: 'Please input blog name!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form> */}
-    </div>
-  );
+import { useAppSelector } from "@/app/lib/hooks";
+import { useRouter } from "next/navigation";
+export default function HomeIndex() {
+  const user = useAppSelector((state) => state.auth?.authUser)
+  const router = useRouter()
+  if (user) router.push('/dashboard')
+  return null
 };
-
-export default HomeIndex;

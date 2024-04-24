@@ -1,3 +1,5 @@
+import StoreProvider from '../StoreProvider';
+import HomeIndex from '../components/home';
 import { getServerSession, getServerUser } from '../utils/amplifyServerUtils';
 
 export default async function Home() {
@@ -6,7 +8,9 @@ export default async function Home() {
   console.log(session);
   return (
     <div>
-      <h1>Hello {user?.username}</h1>
+      <StoreProvider>
+        <HomeIndex />
+      </StoreProvider>
     </div>
   );
 }
