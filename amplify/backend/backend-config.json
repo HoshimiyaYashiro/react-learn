@@ -1,31 +1,22 @@
 {
   "api": {
-    "UserQL": {
+    "wsnovel": {
       "dependsOn": [
         {
           "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "reactlearn1c3a296e"
+          "resourceName": "wsnoveld716c516"
         }
       ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "apiKeyConfig": {
-                "apiKeyExpirationDate": "2024-04-17T11:03:30.025Z",
-                "apiKeyExpirationDays": 7,
-                "description": ""
-              },
-              "authenticationType": "API_KEY"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authreactlearn1c3a296e"
+              "userPoolId": "authwsnoveld716c516"
             }
           }
         }
@@ -35,7 +26,7 @@
     }
   },
   "auth": {
-    "reactlearn1c3a296e": {
+    "wsnoveld716c516": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {

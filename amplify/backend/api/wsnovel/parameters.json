@@ -1,10 +1,10 @@
 {
-  "AppSyncApiName": "UserQL",
+  "AppSyncApiName": "wsnovel",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authreactlearn1c3a296e",
+      "authwsnoveld716c516",
       "Outputs.UserPoolId"
     ]
   }
